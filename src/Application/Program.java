@@ -6,214 +6,147 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import Entities.Account;
+import Entities.BusinessAccount;
+import Entities.SavingsAccount;
+import Exceptions.DomainException;
 
 public class Program {
-	
-	private static final double TAX = -5.00;
 
 	public static void main(String[] args) {
-		
-		List <Account> list = new ArrayList<>();
+
+		List<Account> account = new ArrayList<>();
 		Locale.setDefault(Locale.US);
-		int number, op;
-		Account account = null;
-		
 		Scanner sc = new Scanner(System.in);
-		System.out.println("WELCOME TO OUR BANK MANAGER ... ");
-		System.out.println("");
-		System.out.println("Hello User! First We Need to Instance a New Account To Begin... ");
 		
-			System.out.println("");
-			System.out.print("Enter The Account Number: ");
-			number = sc.nextInt();
-			sc.nextLine();
-			System.out.print("Enter Account Holder: ");
-			String holder = sc.nextLine();
-			System.out.print("Is There An Initial Deposit? ( Y / N )");
-			char response = sc.next().charAt(0);
-			
-			if(response == 'y') {
-				System.out.print("Enter The Initial Deposit Value: ");
-				double initialDeposit = sc.nextDouble();
-				account = new Account(number, holder, initialDeposit);
-				list.add(account);
-				}else {
-					account = new Account(number, holder);
-					list.add(account);
-					}
-			System.out.println("Thanks For Choose Our Bank. Here's Your First Account Data:");
-			System.out.println(account);
-			
-		do {
-			System.out.println("");
+
+		System.out.print("How much will be the fee for withdraw: ");
+		double tax = sc.nextDouble();
+		System.out.print("How much will be the interest rate(for savings account income): ");
+		double interestRate = sc.nextDouble();
+		System.out.println();
+		System.out.println("Now we need to instance a first account to begin... ");
+		System.out.print("What type of account you want to instance?('B' Business or 'S' Savings): ");
+		char type = sc.next().charAt(0);
+		System.out.print("Enter The Account Number: ");
+		int number = sc.nextInt();
+		sc.nextLine();
+		System.out.print("Enter Account Holder: ");
+		String holder = sc.nextLine();
+		System.out.print("Is There An Initial Deposit? (y / n)");
+		char response = sc.next().charAt(0);
+		if (response == 'y' && type == 'b') {
+			System.out.print("Enter The Initial Deposit Value: ");
+			double initialDeposit = sc.nextDouble();
+			System.out.print("Whats the loan limit for this account? ");
+			double loanLimit = sc.nextDouble();
+			account.add(new BusinessAccount(number, holder, initialDeposit, tax, loanLimit));
+			} 
+		else if(response == 'y' && type == 's'){
+			System.out.print("Enter The Initial Deposit Value: ");
+			double initialDeposit = sc.nextDouble();
+			account.add(new SavingsAccount(number, holder, initialDeposit, interestRate));
+			}
+		System.out.println("Thanks For Choose Our Bank. Here's Your First Account Data:");
+		System.out.println(account);
+
+			do {
 			System.out.println("Select an Operation...");
 			System.out.println("[ 1 ] Instance a New Account");
 			System.out.println("[ 2 ] Acess an Existing Account");
 			System.out.println("[ 3 ] Close an Account");
 			System.out.println("[ 0 ] Exit Program");
-			number = sc.nextInt();
-			
-		switch(number) {
+			number = sc.nextInt();			
+
+			switch (number) {
 			case 1:
+				System.out.print("What type of account you want to instance?('B' Business or 'S' Savings): ");
+				type = sc.next().charAt(0);
 				System.out.print("Enter The Account Number: ");
 				number = sc.nextInt();
 				sc.nextLine();
 				System.out.print("Enter Account Holder: ");
 				holder = sc.nextLine();
-				System.out.print("Is There An Initial Deposit? ( Y / N )");
+				System.out.print("Is There An Initial Deposit? (y / n)");
 				response = sc.next().charAt(0);
-				
-				if(response == 'y') {
+				if (response == 'y' && type == 'b') {
 					System.out.print("Enter The Initial Deposit Value: ");
 					double initialDeposit = sc.nextDouble();
-					account = new Account(number, holder, initialDeposit);
-					list.add(account);
-					}else {
-						account = new Account(number, holder);
-						list.add(account);
-						}
-				System.out.println("Account Data:");
-				System.out.println(account);
-				
-				do {
-				System.out.println(" ");
-				System.out.println("What Do You Want To Do Now?");
-				System.out.println("[ 1 ] Depósit");
-				System.out.println("[ 2 ] Withdraw");
-				System.out.println("[ 3 ] See My Balance");
-				System.out.println("[ 0 ] Exit Account");
-				op = sc.nextInt();
-				
-				if(op==0)
+					System.out.print("Whats the loan limit for this account? ");
+					double loanLimit = sc.nextDouble();
+					account.add(new BusinessAccount(number, holder, initialDeposit, tax, loanLimit));
+					} 
+				else if(response == 'y' && type == 's'){
+					System.out.print("Enter The Initial Deposit Value: ");
+					double initialDeposit = sc.nextDouble();
+					account.add(new SavingsAccount(number, holder, initialDeposit, interestRate));
+					}
+					System.out.println("Account Data:");
+					System.out.println(account);
 					break;
-				
-				while(op < 0 && op > 3) {
-					System.out.println("Incorrect Value");
-					op = sc.nextInt();
-				}
-				
-				switch(op) {
-					case 1:
-						System.out.print("Enter a Deposit Value: ");
-						double amount = sc.nextDouble();
-						account.deposit(amount);
-						System.out.println("Updated Account Data:");
-						System.out.println(account);
-						break;
-					case 2:
-						System.out.println("A Tax Value For Withdraw Will Be Charged: tax Value: $5.00");
-						System.out.print("Enter a Withdraw Value: ");
-						amount = sc.nextDouble();
-							if(amount > (account.getBalance() + TAX)) {
-								System.out.println("You Don't Have Enough Balance!");
-								break;
-							}else {
-								account.withdraw(amount);
-								System.out.println("Updated Account Data:");
-								System.out.println(account);
-								break;
-							}
-					case 3:
-						System.out.printf("Your Current Balance: %.2f%n", account.getBalance());
-						break;
-				}
-				}while(op!=0);
-				
-				System.out.println(" ");
-				break;
-				
 			case 2:
-				System.out.println("List of Exixting Accounts. Choose one of them...");
-				for(Account x : list) {
-					System.out.println(x);
-				}
-				System.out.print("Set The Account Number Do You Want To Acess... ");
-				int accnum = sc.nextInt();
-				Account selected = list.stream().filter(x -> x.getNumber() == accnum).findFirst().orElse(null);
-				if (selected == null) {
-					System.out.println("This Account does not exist!");
-				}
-				else {
-					System.out.println("Selected Account: " + selected);
-					do {
-						System.out.println(" ");
-						System.out.println("What Do You Want To Do Now?");
-						System.out.println("[ 1 ] Depósit");
-						System.out.println("[ 2 ] Withdraw");
-						System.out.println("[ 3 ] See My Balance");
-						System.out.println("[ 0 ] Exit Account");
-						op = sc.nextInt();
-						
-						if(op==0)
-							break;
-						
-						if(op < 0 && op >3) {
-							System.out.println("Incorrect Value");
-							op = sc.nextInt();
-						}
-						
-						switch(op) {
+				System.out.println("List of existing accounts:");
+					for (Account x : account) {
+						System.out.println(x);
+					}
+					System.out.print("Type the number of the account you want to access: ");
+					int accselect = sc.nextInt();
+					/*exception*/
+					Account selected = account.stream().filter(x -> x.getNumber() == accselect).findFirst().orElse(null);
+					System.out.println("Account selected:");
+					System.out.println(selected);
+					int option;
+					System.out.println();
+						do {
+							System.out.println("Select an operation:");
+							System.out.println("[ 1 ] Deposit");
+							System.out.println("[ 2 ] Withdraw");
+							System.out.println("[ 3 ] Balance");
+							System.out.println("[ 0 ] Exit Account");
+							option = sc.nextInt();
+							/*exception*/
+							switch(option) {
 							case 1:
-								System.out.print("Enter a Deposit Value: ");
+								System.out.print("Enter a deposit value: ");
 								double amount = sc.nextDouble();
+								/*exception*/
 								selected.deposit(amount);
-								System.out.println("Updated Account Data:");
-								System.out.println(selected);
+								System.out.println("Updated Account data: " + selected);
 								break;
 							case 2:
-								System.out.println("A Tax Value For Withdraw Will Be Charged: tax Value: $5.00");
-								System.out.print("Enter a Withdraw Value: ");
+								System.out.print("Enter a withdraw value: ");
 								amount = sc.nextDouble();
-									if(amount > (selected.getBalance() + TAX)) {
-										System.out.println("You Don't Have Enough Balance!");
-										break;
-									}else {
-										selected.withdraw(amount);
-										System.out.println("Updated Account Data:");
-										System.out.println(selected);
-										break;
-									}
-							case 3:
-								System.out.printf("Your Current Balance: %.2f%n", selected.getBalance());
+								/*exception*/
+								selected.withdraw(amount);
+								System.out.println("Updated Account data: " + selected);
 								break;
-						}
-						}while(op!=0);
-						System.out.println(" ");
-						break;
-				}
-				break;
-				
+							case 3:
+								System.out.println("Account " + selected.getNumber() + " Balance is: " + selected.getBalance());
+								break;
+							case 0:
+								break;
+							}
+						}while(option != 0);
+					break;
 			case 3:
-				System.out.println("It Saddens Us To Know That You Want To Close Your Account.");
-				System.out.println("Here's a List Of Existing Accounts...");
-				System.out.println();
-				for(Account x : list) {
+				System.out.println("List of existing accounts:");
+				for (Account x : account) {
 					System.out.println(x);
 				}
-				System.out.println();
-				System.out.print("Set The Number Of The Account To Be Closed: ");
+				System.out.print("Type the number of the account you want to close: ");
 				int acclose = sc.nextInt();
-				System.out.println();
-				selected = list.stream().filter(x -> x.getNumber() == acclose).findFirst().orElse(null);
-					if(selected == null) {
-						System.out.println("This Account Does Not Exist! Try Again.");
-					}else {
-						System.out.println("Are You Sure You Want To Close This Account? ( Y / N )");
-						System.out.println(selected);
-						response = sc.next().charAt(0);
-						if(response == 'y') {
-							list.removeIf(x -> x.getNumber() == acclose);
-							System.out.println();
-							System.out.println("Account Sucesfully Closed. Plase wait until you money is released...");
-						}else {
-							System.out.println("The Account Has Not Been closed!");
-						}
-					
-					}				
-			}		
-		}while(number != 0);
-		
-		System.out.println("Your cash is ready for the withdraw. Thank You for use our services... Hope to see you soon!");
+				/*exception*/
+				selected = account.stream().filter(x -> x.getNumber() == acclose).findFirst().orElse(null);
+				System.out.println("Are you sure you want to close this account? (y / n)");
+				System.out.println(selected);
+				response = sc.next().charAt(0);
+					if(response == 'y') {
+						account.removeIf(x -> x.getNumber() == acclose);
+					}else if(response == 'n') {
+						System.out.println("Account closure " + selected.getNumber() + "was denied by user.");
+						break;
+					}
+				}
+			}while(number != 0);
 		sc.close();
 	}
 }

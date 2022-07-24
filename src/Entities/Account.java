@@ -1,15 +1,14 @@
 package Entities;
 
+import Exceptions.DomainException;
+
 public class Account {
-	private final double TAX = 5.0;
 	
 	private Integer number;
 	private String holder;
-	private double balance;
+	protected double balance;
 	
-	public Account(Integer number, String holder) {
-		this.number = number;
-		this.holder = holder;
+	public Account() {
 	}
 
 	public Account(Integer number, String holder, Double balance) {
@@ -39,15 +38,21 @@ public class Account {
 	}
 	
 	public void withdraw(Double amount) {
-		balance -= amount + TAX;
+		balance -= amount;
+	}
+		
+	public void validateWithdraw(double amount) {
+		if(amount > getBalance()) {
+			throw new DomainException("Saldo insuficiente");
+		}
 	}
 	
 	public String toString() {
-		return "\nAccount: "
+		return "Account: "
 				+ number
-				+ "\nHolder: "
+				+ " Holder: "
 				+ holder
-				+ "\nBalance: $"
+				+ " Balance: $"
 				+ String.format("%.2f", balance);
 	}
 	

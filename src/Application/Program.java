@@ -18,7 +18,6 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 		
-
 		System.out.print("How much will be the fee for withdraw: ");
 		double tax = sc.nextDouble();
 		System.out.print("How much will be the interest rate(for savings account income): ");
@@ -56,7 +55,6 @@ public class Program {
 			System.out.println("[ 3 ] Close an Account");
 			System.out.println("[ 0 ] Exit Program");
 			number = sc.nextInt();			
-
 			switch (number) {
 			case 1:
 				System.out.print("What type of account you want to instance?('B' Business or 'S' Savings): ");
@@ -90,7 +88,6 @@ public class Program {
 					}
 					System.out.print("Type the number of the account you want to access: ");
 					int accselect = sc.nextInt();
-					/*exception*/
 					Account selected = account.stream().filter(x -> x.getNumber() == accselect).findFirst().orElse(null);
 					System.out.println("Account selected:");
 					System.out.println(selected);
@@ -103,20 +100,21 @@ public class Program {
 							System.out.println("[ 3 ] Balance");
 							System.out.println("[ 0 ] Exit Account");
 							option = sc.nextInt();
-							/*exception*/
 							switch(option) {
 							case 1:
 								System.out.print("Enter a deposit value: ");
 								double amount = sc.nextDouble();
-								/*exception*/
 								selected.deposit(amount);
 								System.out.println("Updated Account data: " + selected);
 								break;
 							case 2:
+								try {
 								System.out.print("Enter a withdraw value: ");
 								amount = sc.nextDouble();
-								/*exception*/
 								selected.withdraw(amount);
+								}catch(DomainException e) {
+									System.out.println(e.getMessage());
+								}
 								System.out.println("Updated Account data: " + selected);
 								break;
 							case 3:
@@ -134,7 +132,6 @@ public class Program {
 				}
 				System.out.print("Type the number of the account you want to close: ");
 				int acclose = sc.nextInt();
-				/*exception*/
 				selected = account.stream().filter(x -> x.getNumber() == acclose).findFirst().orElse(null);
 				System.out.println("Are you sure you want to close this account? (y / n)");
 				System.out.println(selected);

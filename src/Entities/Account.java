@@ -20,6 +20,12 @@ public class Account {
 	public Integer getNumber() {
 		return number;
 	}
+	
+	protected void validateTax(double tax) {
+		if(tax > 100.0) {
+			throw new DomainException("Withdraw fee must be less than $10.0");
+		}
+	}
 
 	public String getHolder() {
 		return holder;
@@ -38,10 +44,11 @@ public class Account {
 	}
 	
 	public void withdraw(Double amount) {
+		validateWithdraw(amount);
 		balance -= amount;
 	}
-		
-	public void validateWithdraw(double amount) {
+			
+	protected void validateWithdraw(double amount) {
 		if(amount > getBalance()) {
 			throw new DomainException("Saldo insuficiente");
 		}

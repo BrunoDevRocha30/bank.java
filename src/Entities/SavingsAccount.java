@@ -1,5 +1,7 @@
 package Entities;
 
+import Exceptions.DomainException;
+
 public final class SavingsAccount extends Account {
 
 	private Double interestRate;
@@ -28,7 +30,15 @@ public final class SavingsAccount extends Account {
 	
 	@Override
 	public void withdraw(Double amount) {
+		validateWithdraw(amount);
 		balance -= amount;
+	}
+	
+	@Override
+	protected void validateWithdraw(double amount) {
+		if(amount > getBalance()) {
+			throw new DomainException("Saldo insuficiente");
+		}
 	}
 	
 	public void interestRateUpdate() {

@@ -40,6 +40,7 @@ public final class BusinessAccount extends Account{
 	
 	@Override
 	public void withdraw(Double amount) {
+		validateWithdraw(amount);
 		balance -= amount + tax;
 	}
 	
@@ -48,7 +49,7 @@ public final class BusinessAccount extends Account{
 	}
 	
 	@Override
-	public void validateWithdraw(double amount) {
+	protected void validateWithdraw(double amount) {
 		if(amount > tax + getBalance()) {
 			throw new DomainException("Saldo insuficiente");
 		}
